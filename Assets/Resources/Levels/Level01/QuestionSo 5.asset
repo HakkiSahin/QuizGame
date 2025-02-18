@@ -12,5 +12,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dc12158b1769b034cb28a118e518772d, type: 3}
   m_Name: QuestionSo 5
   m_EditorClassIdentifier: 
-  questionIndex: 
-  questionIcon: {fileID: 0}
+  questionIndex: 1
+  questionIcons:
+  - {fileID: -855298285791758126, guid: 80437125d067bd74fb94ea46c6245357, type: 3}
+  - {fileID: 8957324059118975939, guid: 3ee37c540aec22f408d30d0e81f720c3, type: 3}
+  - {fileID: -6384098166633207118, guid: 8be2d7c90d10d13429019fbd9aaf139a, type: 3}
+  - {fileID: 8957324059118975939, guid: 3ee37c540aec22f408d30d0e81f720c3, type: 3}
+  answerString: Answer
+  othersString:
+  - String 1
+  - String 2
+  - String 3

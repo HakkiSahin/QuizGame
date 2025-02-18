@@ -1,12 +1,25 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using EventBus;
+using Random = UnityEngine.Random;
 
 public class LevelManager : MonoBehaviour
 {
-    [SerializeField] private string levelFolderName = "02DEV/Levels"; 
+    [SerializeField] private string levelFolderName = "02DEV/Levels";
 
     public List<QuestionSo> selectedLevels = new List<QuestionSo>();
+
+    private void OnEnable()
+    {
+        EventBus<LoadNextQuestionEvent>.AddListener(LoadNextQuestion);
+    }
+
+    private void OnDisable()
+    {
+        EventBus<LoadNextQuestionEvent>.RemoveListener(LoadNextQuestion);
+    }
 
     void Start()
     {
@@ -15,7 +28,6 @@ public class LevelManager : MonoBehaviour
 
     void LoadLevels()
     {
-       
         QuestionSo[] allLevels = Resources.LoadAll<QuestionSo>(levelFolderName);
 
         if (allLevels.Length == 0)
@@ -24,10 +36,25 @@ public class LevelManager : MonoBehaviour
             return;
         }
 
-        // Rastgele 10 tane seç
         selectedLevels = allLevels.OrderBy(x => Random.value).Take(10).ToList();
 
-        // Kontrol amaçlı log bas
-        Debug.Log($"'{levelFolderName}' klasöründen {selectedLevels.Count} level yüklendi.");
+        StartGame();
+    }
+
+    private void StartGame()
+    {
+        EventBus<LoadQuestionEvent>.Emit(this, new LoadQuestionEvent { Question = selectedLevels[0] });
+    }
+
+    private void LoadNextQuestion(object sender, LoadNextQuestionEvent @event)
+    {
+        selectedLevels.RemoveAt(0);
+        StartGame();
+    }
+
+    [ContextMenu("Load Levels")]
+    public void LoadNextLevels()
+    {
+        EventBus<LoadNextQuestionEvent>.Emit(this, new LoadNextQuestionEvent());
     }
 }

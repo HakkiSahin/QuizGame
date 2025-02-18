@@ -8,7 +8,6 @@ using Random = UnityEngine.Random;
 public class DynamicGridLayout : MonoBehaviour
 {
     [SerializeField] List<GameObject> fillAreas;
-    List<Sprite> spriteList = new();
 
     private readonly List<GameObject> _spawnedItems = new List<GameObject>();
 
@@ -24,12 +23,8 @@ public class DynamicGridLayout : MonoBehaviour
 
     private void LoadQuestion(object sender, LoadQuestionEvent e)
     {
-        spriteList.Clear();
-        spriteList.AddRange(e.Question.questionIcons);
-        FillList();
+        fillAreas[e.Question.questionIcons.Count - 1].SetActive(true);
+        EventBus<FillAreaEvent>.Emit(this, new FillAreaEvent { SpriteList = e.Question.questionIcons });
     }
-
-    private void FillList()
-    {
-    }
+    
 }
