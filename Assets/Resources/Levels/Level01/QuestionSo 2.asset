@@ -17,8 +17,4 @@ MonoBehaviour:
   - {fileID: -855298285791758126, guid: 80437125d067bd74fb94ea46c6245357, type: 3}
   - {fileID: -6384098166633207118, guid: 8be2d7c90d10d13429019fbd9aaf139a, type: 3}
   - {fileID: -7070559713554445937, guid: f6d8b34eb761f5a46a09de7bc835d3b0, type: 3}
-  answerString: Answer
-  othersString:
-  - String 1
-  - String 2
-  - String 3
+  answerString: Godser inth laksjs
