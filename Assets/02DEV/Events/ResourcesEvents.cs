@@ -14,3 +14,13 @@ public struct FillAreaEvent
 public struct LoadNextQuestionEvent
 {
 }
+
+public struct ControlLetterEvent
+{
+    public string Letter;
+}
+
+public struct CreateAnswerButtonEvent
+{
+    public string LevelWord;
+}
