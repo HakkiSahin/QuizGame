@@ -6,7 +6,5 @@ public class QuestionSo : ScriptableObject
 {
     public string questionIndex;
     public List<Sprite> questionIcons;
-    
     public string answerString;
-    public List<string> othersString;
 }
