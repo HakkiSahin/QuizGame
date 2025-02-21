@@ -38,13 +38,13 @@ public class AnswerButtonGenerator : MonoBehaviour
     }
 
 
-    private readonly char[] _letters = new char[28];
+    private readonly char[] _letters = new char[24];
 
     private string GenerateShuffledLetters(string input)
     {
         string cleanedWord = input.Replace(" ", "");
         int wordLength = cleanedWord.Length;
-        int remainingLetters = 28 - wordLength;
+        int remainingLetters = _buttonAmount - wordLength;
 
         if (remainingLetters < 0)
         {
@@ -52,19 +52,17 @@ public class AnswerButtonGenerator : MonoBehaviour
             return null;
         }
 
-        // Mevcut harfleri diziye kopyala
+        
         for (int i = 0; i < wordLength; i++)
         {
             _letters[i] = cleanedWord[i];
         }
-
-        // Eksik harfleri rastgele tamamla (UnityEngine.Random.Range kullanıldı)
-        for (int i = wordLength; i < 28; i++)
+        for (int i = wordLength; i < _buttonAmount; i++)
         {
             _letters[i] = (char)Random.Range('A', 'Z' + 1);
         }
 
-        // Fisher-Yates Shuffle ile karıştır
+     
         FisherYatesShuffle();
 
         return new string(_letters);

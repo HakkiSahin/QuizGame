@@ -13,7 +13,7 @@ public class TextBoxGenerator : MonoBehaviour
     [SerializeField] int maxLines = 8;
 
     private int _openLineIndex;
-    private string _currentText;
+    private string _currentText="";
 
     private List<GameObject> _createdAnswerObject = new();
 
@@ -46,6 +46,7 @@ public class TextBoxGenerator : MonoBehaviour
         foreach (string word in textArray)
         {
             if (_lastWord != "") _openLineIndex = ControlNextLine(word);
+            
             textObjects[_openLineIndex].SetActive(true);
             Transform parentObject = textObjects[_openLineIndex].transform;
 
@@ -55,7 +56,7 @@ public class TextBoxGenerator : MonoBehaviour
                 _createdAnswerObject.Add(Instantiate(createObject[0], Vector3.zero, quaternion.identity, parentObject));
             }
 
-            _createdAnswerObject.Add(Instantiate(createObject[0], Vector3.zero, quaternion.identity, parentObject));
+            _createdAnswerObject.Add(Instantiate(createObject[1], Vector3.zero, quaternion.identity, parentObject));
             _lastWord += " ";
         }
 
@@ -75,7 +76,7 @@ public class TextBoxGenerator : MonoBehaviour
         if (_lastWord[_currentText.Length].ToString() == e.Letter)
         {
             _currentText += e.Letter;
-            _createdAnswerObject[_currentText.Length].GetComponent<BoxController>().SetLetter(e.Letter);
+            _createdAnswerObject[_currentText.Length-1].GetComponent<BoxController>().SetLetter(e.Letter);
         }
         else
         {

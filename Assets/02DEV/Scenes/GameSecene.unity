@@ -2071,7 +2071,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _parentTransform: {fileID: 2071167929}
-  _buttonAmount: 28
+  _buttonAmount: 24
   _buttonPrefab: {fileID: 4485703764637856296, guid: 9b2facebdc1856d4c8a25e555a7ea9f1, type: 3}
 --- !u!1 &2039936475
 GameObject:
