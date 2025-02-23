@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using EventBus;
 using UnityEngine;
 
@@ -8,15 +9,20 @@ public class AnswerButtonGenerator : MonoBehaviour
     [SerializeField] private GameObject _buttonPrefab;
 
     private string _levelWord;
-
+    
+    private readonly List<GameObject> _buttons=new();
     private void OnEnable()
     {
         EventBus<CreateAnswerButtonEvent>.AddListener(CreateAnswerButton);
+        EventBus<ClearEvent>.AddListener(ClearDataList);
     }
+
+ 
 
     private void OnDisable()
     {
         EventBus<CreateAnswerButtonEvent>.RemoveListener(CreateAnswerButton);
+        EventBus<ClearEvent>.RemoveListener(ClearDataList);
     }
 
 
@@ -33,6 +39,7 @@ public class AnswerButtonGenerator : MonoBehaviour
         foreach (var letter in levelWord)
         {
             GameObject buttonObj = Instantiate(_buttonPrefab, _parentTransform);
+            _buttons.Add(buttonObj);
             buttonObj.GetComponent<LetterButton>().SetText(letter.ToString());
         }
     }
@@ -48,7 +55,7 @@ public class AnswerButtonGenerator : MonoBehaviour
 
         if (remainingLetters < 0)
         {
-            Debug.LogError("Kelime 28 harften büyük olamaz!");
+            Debug.LogError("The word cannot be more than 28 letters!");
             return null;
         }
 
@@ -73,9 +80,17 @@ public class AnswerButtonGenerator : MonoBehaviour
         for (int i = _letters.Length - 1; i > 0; i--)
         {
             int j = Random.Range(0, i + 1);
-            char temp = _letters[i];
-            _letters[i] = _letters[j];
-            _letters[j] = temp;
+            (_letters[i], _letters[j]) = (_letters[j], _letters[i]);
         }
+    }
+    
+    private void ClearDataList(object sender, ClearEvent e)
+    {
+        foreach (var button in _buttons)
+        {
+            DestroyImmediate(button);
+        }
+        _buttons.Clear();
+        
     }
 }

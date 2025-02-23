@@ -12,6 +12,7 @@ public class LetterButton : MonoBehaviour
     public void SetLetter()
     {
         EventBus<ControlLetterEvent>.Emit(this, new ControlLetterEvent { Letter = textMesh.text });
+        
         body.SetActive(false);
     }
 

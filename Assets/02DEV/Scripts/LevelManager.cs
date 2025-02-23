@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Linq;
+using DG.Tweening;
 using EventBus;
 using Random = UnityEngine.Random;
 
@@ -43,13 +44,15 @@ public class LevelManager : MonoBehaviour
 
     private void StartGame()
     {
-        EventBus<LoadQuestionEvent>.Emit(this, new LoadQuestionEvent { Question = selectedLevels[0] });
+        EventBus<LoadQuestionEvent>.Emit(this, new LoadQuestionEvent { Question = selectedLevels[0]});
     }
 
     private void LoadNextQuestion(object sender, LoadNextQuestionEvent @event)
     {
+       
         selectedLevels.RemoveAt(0);
-        StartGame();
+        EventBus<ClearEvent>.Emit(this, new ClearEvent());
+        DOVirtual.DelayedCall(1f, StartGame);
     }
 
     [ContextMenu("Load Levels")]

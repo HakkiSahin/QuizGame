@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using EventBus;
+using TMPro;
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -13,7 +13,7 @@ public class TextBoxGenerator : MonoBehaviour
     [SerializeField] int maxLines = 8;
 
     private int _openLineIndex;
-    private string _currentText="";
+    private string _currentText = "";
 
     private List<GameObject> _createdAnswerObject = new();
 
@@ -21,6 +21,7 @@ public class TextBoxGenerator : MonoBehaviour
     {
         EventBus<LoadQuestionEvent>.AddListener(LoadText);
         EventBus<ControlLetterEvent>.AddListener(ControlLetter);
+        EventBus<ClearEvent>.AddListener(ClearDateList);
     }
 
 
@@ -33,6 +34,7 @@ public class TextBoxGenerator : MonoBehaviour
     {
         EventBus<LoadQuestionEvent>.RemoveListener(LoadText);
         EventBus<ControlLetterEvent>.RemoveListener(ControlLetter);
+        EventBus<ClearEvent>.RemoveListener(ClearDateList);
     }
 
     private string _lastWord = "";
@@ -46,7 +48,7 @@ public class TextBoxGenerator : MonoBehaviour
         foreach (string word in textArray)
         {
             if (_lastWord != "") _openLineIndex = ControlNextLine(word);
-            
+
             textObjects[_openLineIndex].SetActive(true);
             Transform parentObject = textObjects[_openLineIndex].transform;
 
@@ -61,7 +63,14 @@ public class TextBoxGenerator : MonoBehaviour
         }
 
         _lastWord = _lastWord.ToUpper(new CultureInfo("en-US"));
-        EventBus<CreateAnswerButtonEvent>.Emit(this, new CreateAnswerButtonEvent{LevelWord = _lastWord});
+        
+        foreach (var letter in _lastWord)
+        {
+            if (letter == ' ') _currentText += " ";
+            else _currentText += "_";
+        }
+
+        EventBus<CreateAnswerButtonEvent>.Emit(this, new CreateAnswerButtonEvent { LevelWord = _lastWord });
     }
 
     private int ControlNextLine(string nextWord)
@@ -71,16 +80,35 @@ public class TextBoxGenerator : MonoBehaviour
 
     private void ControlLetter(object sender, ControlLetterEvent e)
     {
-        if (_lastWord[_currentText.Length].ToString() == " ") _currentText += " ";
+        
+        Debug.Log(_lastWord);
+        int index = _lastWord.IndexOf(e.Letter, StringComparison.Ordinal);
 
-        if (_lastWord[_currentText.Length].ToString() == e.Letter)
+        if (index != -1)
         {
-            _currentText += e.Letter;
-            _createdAnswerObject[_currentText.Length-1].GetComponent<BoxController>().SetLetter(e.Letter);
+            _currentText = _currentText.Substring(0, index) + e.Letter + _currentText.Substring(index + 1);
+            _lastWord = _lastWord.Substring(0, index) + "_" + _lastWord.Substring(index + 1);
+            _createdAnswerObject[index].GetComponent<BoxController>().SetLetter(e.Letter);
+            if (!_currentText.Contains("_"))
+            {
+                EventBus<LoadNextQuestionEvent>.Emit(this, new LoadNextQuestionEvent());
+            }
         }
         else
         {
             Debug.Log("Wrong letter");
         }
+    }
+
+    private void ClearDateList(object sender, ClearEvent @event)
+    {
+        foreach (var btn in _createdAnswerObject)
+        {
+            DestroyImmediate(btn);
+        }
+
+        _lastWord = "";
+        _currentText = "";
+        _createdAnswerObject.Clear();
     }
 }

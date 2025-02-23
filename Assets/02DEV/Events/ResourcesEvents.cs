@@ -24,3 +24,8 @@ public struct CreateAnswerButtonEvent
 {
     public string LevelWord;
 }
+
+public struct ClearEvent
+{
+    
+}
